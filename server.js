@@ -6,8 +6,19 @@ var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/public'));
 
-io.on('connection',function(){
+io.on('connection',function(socket){
 	console.log('User Connected via socket.io!');
+
+	socket.on('message',function(message){
+		console.log('Message Received:'+message.text);
+		io.emit('message',message);
+		//socket.broadcast.emit('message',message);
+	});
+
+
+	socket.emit('message',{
+		text: 'Welocome to the chat application!'
+	});
 })
 
 http.listen(PORT, function () {
